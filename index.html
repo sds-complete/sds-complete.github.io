@@ -2,6 +2,8 @@
 <!-- saved from url=(0042)https://research.nvidia.com/labs/par/calm/ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><script src="" type="text/javascript"></script>
 <script type="text/javascript">google.load("jquery", "1.3.2");</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
 <style type="text/css">
 body {
@@ -282,12 +284,8 @@ figure {
                  Paper
             </a>
             <a class="supp-btn" href="">
-                <span class="material-icons">  </span> 
-                  BibTeX
-            </a>
-            <a class="supp-btn" href="">
-                <span class="material-icons"> (coming soon) </span> 
-                  Code
+                <span class="material-icons"> Code </br> </span> 
+                  (Coming Soon)
             </a>
         </div></div>
     </div>
@@ -298,7 +296,7 @@ figure {
                     <img width="100%" src="./files/teaser.png">
                 </a>
                 <p class="caption" style="margin-bottom: 1px;">
-                    We present SDS-Complete: A test-time optimization method for completing point clouds, captured by depth sensors, into complete surface representation using pre-trained text-to-image diffusion model. Our method takes two inputs: an incomplete point cloud (blue) and a textual description of the object ("A chair"). It  outputs a complete surface (gray) that is consistent with the input points (blue). The method works well on both in-domain (left) and out-of-distribution (right) classes with respect to existing 3D shape datasets like ShapeNet
+                    We present SDS-Complete: A test-time optimization method for completing point clouds, captured by depth sensors, into complete surface representation using pre-trained text-to-image diffusion model. Our method takes two inputs: an incomplete point cloud (blue) and a textual description of the object ("A chair"). It  outputs a complete surface (gray) that is consistent with the input points (blue).
                 </p>
             </figure>
     </section>
@@ -308,7 +306,6 @@ figure {
         <hr>
         <p>
             Point-cloud data collected in real-world applications are often incomplete. Data is typically missing due to objects being observed from partial viewpoints, which only capture a specific perspective or angle. Additionally, data can be incomplete due to occlusion and low-resolution sampling.
-%
 Existing completion approaches rely on datasets of  predefined objects to guide the completion of noisy and incomplete, point clouds. However, these approaches perform poorly when tested on 
 Out-Of-Distribution (OOD) objects, that are poorly represented in the training dataset.
 Here we leverage  recent advances in text-guided image generation, which lead to major breakthroughs in text-guided shape generation. 
@@ -362,7 +359,9 @@ We demonstrate that SDS-complete generates completions for various objects with 
                 Your browser does not support the video tag.
             </video>
             <p class="caption" style="margin-bottom: 1px;">
-                The components of our SDS-Complete approach. Our method optimizes two neural functions: A signed distance function representing the surface and a volumetric coloring function.  Together, they define a radiance field, which is used to render novel image views. The SDS-Loss is applied to these renderings and encourages them to be compatible with the input label "A sofa" (bottom left). To constrain the surface to lie on the input points, we encourage the signed distance function to be zero at the input points (Sensor fidelity loss).
+                <div class="mathjax">
+    <p>The components of our SDS-Complete approach. Our method optimizes two neural functions: A signed distance function \(f_\theta\) representing the surface and a volumetric coloring function \(\vec{c}_\varphi\). Together, \((\vec{c}_\varphi,f_\theta)\) define a radiance field, which is used to render novel image views \(Im_0,\ldots Im_n\). The SDS-Loss is applied to these renderings and encourages them to be compatible with the input text \(\vec{y}\). To constrain the surface to lie on the input points, we encourage the signed distance function to be zero at the input points (Sensor compatibility loss).</p>
+</div>
             </p>
         </figure>
 
@@ -373,13 +372,13 @@ We demonstrate that SDS-complete generates completions for various objects with 
         <h2>Redwood dataset</h2>
         <hr>
         
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Input points</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Output Surface</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Points+Surface</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Input points</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Output Surface</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Points+Surface</strong></p>
         <figure style="display: inline; width: 33%;">
             <video style="display: inline;" width="49.5%" controls="" muted="" loop="" autoplay="">
                 <source src="./files/01184.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </figure>
-        
         <figure style="display: inline; width: 49%;">
             <video style="display: inline;" width="49.5%" controls="" muted="" loop="" autoplay="">
                 <source src="./files/04797.mp4" type="video/mp4">
@@ -392,7 +391,6 @@ We demonstrate that SDS-complete generates completions for various objects with 
                 Your browser does not support the video tag.
             </video>
         </figure>
-        
         
 
         <figure style="display: inline; width: 33%;">
@@ -407,7 +405,7 @@ We demonstrate that SDS-complete generates completions for various objects with 
                 Your browser does not support the video tag.
             </video>
         </figure>
-               
+        
 
         <figure style="display: inline; width: 33%;">
             <video style="display: inline;" width="49.5%" controls="" muted="" loop="" autoplay="">
@@ -422,7 +420,6 @@ We demonstrate that SDS-complete generates completions for various objects with 
             </video>
         </figure>
         
-        
         <figure style="display: inline; width: 33%;">
             <video style="display: inline;" width="49.5%" controls="" muted="" loop="" autoplay="">
                 <source src="./files/09424.mp4" type="video/mp4">
@@ -436,15 +433,15 @@ We demonstrate that SDS-complete generates completions for various objects with 
             </video>
         </figure>
         <figure style="display: inline; width: 33%;">
-            <video style="display: inline;" width="49%" controls="" muted="" loop="" autoplay="">
+            <video style="display: inline;" width="49.5%" controls="" muted="" loop="" autoplay="">
                 <source src="./files/04457.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             
             <p class="caption" style="margin-bottom: 1px;">
-                We present several examples arranged in two columns. In each column, we provide the following information: 
+            Example arranged in two columns, where each column has the following structure: 
                 Left: The partial scans that are given as input to our model. Middle: the completed surface. Right: the completed surface together with the input points.
-                For additional examples, please refer to the paper.
+                 For more examples, please refer to the paper.
             </p>
         </figure>
         
@@ -503,7 +500,7 @@ We demonstrate that SDS-complete generates completions for various objects with 
             </video>
             
                         <p class="caption" style="margin-bottom: 1px;">
-                The completed surface together with the input points.
+                The completed surface (gray) together with the input points (blue).
             </p>
         </figure>
 
