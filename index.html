@@ -274,7 +274,7 @@ figure {
             <div class="venue text-center"><sup>2</sup>Bar-Ilan University</div>
         </div>
         <div class="affil-row">
-            <div class="venue text-center"><b>Arxiv 2023</b></div>
+            <div class="venue text-center"><b>NeurIPS 2023</b></div>
         </div>
 
         <div style="clear: both">
@@ -297,7 +297,7 @@ figure {
                     <img width="100%" src="./files/teaser.png">
                 </a>
                 <p class="caption" style="margin-bottom: 1px;">
-                    We present SDS-Complete: A test-time optimization method for completing point clouds, captured by depth sensors, into complete surface representation using pre-trained text-to-image diffusion model. Our method takes two inputs: an incomplete point cloud (blue) and a textual description of the object ("A chair"). It  outputs a complete surface (gray) that is consistent with the input points (blue).
+                    We present SDS-Complete: A test-time optimization method for completing point clouds captured by depth sensors, leveraging pre-trained text-to-image diffusion model. The inputs to our method are an incomplete point cloud (blue) along with a textual description of the object. The output is a complete surface (gray) that is consistent with the input points (blue). The method works well on a variety of objects captured by real-world point-cloud sensors.
                 </p>
             </figure>
     </section>
@@ -306,14 +306,7 @@ figure {
         <h2>Abstract</h2>
         <hr>
         <p>
-            Point-cloud data collected in real-world applications are often incomplete. Data is typically missing due to objects being observed from partial viewpoints, which only capture a specific perspective or angle. Additionally, data can be incomplete due to occlusion and low-resolution sampling.
-Existing completion approaches rely on datasets of  predefined objects to guide the completion of noisy and incomplete, point clouds. However, these approaches perform poorly when tested on 
-Out-Of-Distribution (OOD) objects, that are poorly represented in the training dataset.
-Here we leverage  recent advances in text-guided image generation, which lead to major breakthroughs in text-guided shape generation. 
-We describe an approach called SDS-complete that 
-uses a pre-trained text-to-image diffusion model and leverages the text semantics of a given incomplete point cloud of an object, to obtain a complete surface representation.
-SDS-complete can complete a variety of objects using test-time optimization without expensive collection of 3D information. We evaluate SDS-complete on incomplete scanned objects, captured by real-world depth sensors and LiDAR scanners. We find that it effectively reconstructs objects that are absent from common datasets, reducing Chamfer loss by 50% on average compared with current methods.  
-
+            Point-cloud data collected in real-world applications are often incomplete, because objects are being observed from specific viewpoints, which only capture one perspective. Data can also be incomplete due to occlusion and low-resolution sampling. Existing approaches to completion rely on training models with datasets of predefined objects to guide the completion of point clouds. Unfortunately, these approaches fail to generalize when tested on objects or real-world setups that are poorly represented in their training set. Here, we leverage recent advances in text-guided 3D shape generation, showing how to use image priors for generating 3D objects. We describe an approach called SDS-Complete that uses a pre-trained text-to-image diffusion model and leverages the text semantics of a given incomplete point cloud of an object, to obtain a complete surface representation. SDS-Complete can complete a variety of objects using test-time optimization without expensive collection of 3D data. We evaluate SDS-Complete on a collection of incomplete scanned objects, captured by real-world depth sensors and LiDAR scanners. We find that it effectively reconstructs objects that are absent from common datasets, reducing Chamfer loss by about 50% on average compared with current methods.
         </p>
     </section>
 
@@ -332,19 +325,40 @@ SDS-complete can complete a variety of objects using test-time optimization with
             <div style="width: 100%;">
                 <br><br>
                 <p>
-                  In this work, we address this challenge of OOD objects by leveraging a pretrained text-to-image diffusion model.
-                  It has been shown that these models, even though never trained on 3D data, can be used for text-guided 3D shape generation.
-                  This is done through the SDS loss, which measures the agreement of the 3D shape's rendered images with the model prior. 
-                  Our key idea is that since text-to-image diffusion models were trained on a vast number of diverse objects, they contain a strong prior about the shape and texture of objects, and that prior can be used for completing missing parts. For example, given a partial point cloud, knowing that it corresponds to a chair can guide the completion process, because objects from this class are expected to exhibit some types of symmetries and parts. 
+                    Here, we address the challenge of completing 3D objects in the wild from real-world partial point
+                    clouds. This is achieved by leveraging priors about object shapes that are encoded in pretrained
+                    text-to-image diffusion models. Our key idea is that since text-to-image diffusion models were trained
+                    on a vast number of diverse objects, they contain a strong prior about the shape and texture of objects,
+                    and that prior can be used for completing object missing parts. For example, given a partial point
+                    cloud, knowing that it corresponds to a chair can guide the completion process, because objects from
+                    this class are expected to exhibit some types of symmetries and parts that are captured in 2D images.
                 </p> 
 
                 <p>
-The key challenge in this approach is to combine the prior information from the diffusion model with the observed partial point cloud, to generate a complete shape that is faithful to the partial observations. We introduce SDS-complete: a point cloud completion method that uses the SDS-loss to accurately complete object surfaces while being guided by input constraints of text and point clouds.  To be consistent with the input points, we use a Signed Distance Function (SDF) surface representation, and constrain the zero level set of the SDF to go through the input points. SDS-complete enables overcoming the limitations of working with OOD objects as it brings the semantics from a pretrained text-to-image diffusion model. That allows us to generate accurate and realistic 3D shapes from partial observations.
+                    A similar intuition has been used for generating 3D objects “from scratch" (DreamFusion).
+                    DreamFusion uses the SDS loss, which measures agreement between 2D model prior and renderings
+                    of the 3D shape. Unfortunately, naively applying the SDS loss to our problem of point cloud
+                    completion fails. This is because, as we show below, it does not combine well the hard constraints
+                    implied by the points collected from the sensor with the prior embedded in the diffusion model.
                 </p>
                 
                                 <p>
-We demonstrate that SDS-complete generates completions for various objects with different shape types from two real-world datasets: the Redwood dataset, which contains various incomplete real-world depth camera scans, and the KITTI dataset, which contains object LiDAR scans from driving scenarios. In both cases, we outperform state-of-the-art methods for OOD objects, while showing comparable results on object classes that were used to train these methods. 
-                </p>     
+                                    To address these challenges, we introduce SDS-Complete: a method to complete a given partial
+point cloud using several considerations. First, we use a Signed Distance Function (SDF) surface
+representation, and constrain the zero level set of the SDF to go through the input
+points. Second, we use information about areas with no collected points, to rule out object parts
+in these areas. Third, we use a prior about camera position and orientation and a curriculum of
+out-painting when sampling camera positions. Finally, we use the SDS loss to incorporate prior
+guided by the class of an object on the rendered images.
+                </p>   
+                
+                <p>
+                    We demonstrate that SDS-Complete generates completions for various objects with different shape
+types from two real-world datasets: the Redwood dataset, which contains various incomplete
+real-world depth camera partial scans, and the KITTI dataset, which contains object LiDAR
+scans from driving scenarios. In both cases, SDS-Complete outperforms the current state-of-the-art
+methods.
+                </p>
             </div>
         </div>
     </section>
@@ -356,20 +370,21 @@ We demonstrate that SDS-complete generates completions for various objects with 
 
         <figure style="width: 100%;">
             <video width="90%" controls="" muted="" loop="" autoplay="">
-                <source src="./files/for_video.mp4" type="video/mp4">
+                <source src="./files/SDS-Complete_pipeline_video.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <p class="caption" style="margin-bottom: 1px;">
                 <div class="mathjax">
-    <p>The components of our SDS-Complete approach. Our method optimizes two neural functions: A signed distance function \(f_\theta\) representing the surface and a volumetric coloring function \(\vec{c}_\varphi\). Together, \((\vec{c}_\varphi,f_\theta)\) define a radiance field, which is used to render novel image views \(Im_0,\ldots Im_n\). The SDS-Loss is applied to these renderings and encourages them to be compatible with the input text \(\vec{y}\). To constrain the surface to lie on the input points, we encourage the signed distance function to be zero at the input points (Sensor compatibility loss).</p>
+    
+
+    SDS-loss optimizes two neural functions: A signed distance function \(f_\theta\) representing the surface and a volumetric coloring function \(\mathbf{c}_\varphi\). Together, \((\mathbf{c}_\varphi,f_\theta)\) define a radiance field, which is used to render novel image views \(Im_0,\ldots Im_n\). The SDS loss is applied to the renderings to encourage them to be compatible with the input text \(\mathbf{y}\). Three sensor-compatibility losses verify that the reconstructed surface is compatible with the sensor observations in various aspects. </p>
 </div>
             </p>
         </figure>
 
         <h2>Results</h2>
         <hr>
-        We conduct an evaluation of our model, on two real-world datasets that encompass a diverse array of general objects. Our primary objective in selecting these datasets is to demonstrate that our proposed method can handle diverse variations of object types that are not confined to any specific domain. 
-
+        Our primary goal is to evaluate our SDS-Complete and baseline method in real-world scenarios. This is in contrast to evaluating test splits from the synthetic datasets that were used for training the baseline methods. To achieve relevant evaluation datasets, we based the evaluation on partial real-world point clouds obtained from depth images and LiDAR scans.
         <h2>Redwood dataset</h2>
         <hr>
         
